@@ -7,7 +7,7 @@ void main() {
 }
 
 class WorkoutTimerApp extends StatelessWidget {
-  const WorkoutTimerApp({Key? key}) : super(key: key);
+  const WorkoutTimerApp({super.key});
 
   @override
   Widget build(BuildContext context) {
