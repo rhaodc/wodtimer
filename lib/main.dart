@@ -7,7 +7,7 @@ void main() {
 }
 
 class WorkoutTimerApp extends StatelessWidget {
-  const WorkoutTimerApp({super.key});
+  const WorkoutTimerApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -165,6 +165,7 @@ class MixBuilderScreen extends StatefulWidget {
 }
 
 class _MixBuilderScreenState extends State<MixBuilderScreen> {
+    String? expandedPickerKey;
   final List<WorkoutBlock> blocks = [];
 
   void addBlock(String type) {
@@ -180,6 +181,7 @@ class _MixBuilderScreenState extends State<MixBuilderScreen> {
   }
 
   void startTimer() {
+    if (blocks.isEmpty) return;
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => TimerScreen(blocks: blocks)),
@@ -188,6 +190,7 @@ class _MixBuilderScreenState extends State<MixBuilderScreen> {
 
   Widget buildBlockEditor(int index) {
     final block = blocks[index];
+    String keyPrefix = 'block-$index';
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Padding(
@@ -214,6 +217,12 @@ class _MixBuilderScreenState extends State<MixBuilderScreen> {
                 initialValue: block.duration,
                 label: block.type == "Rest" ? "Rest Duration (sec)" : "Duration (sec)",
                 onChanged: (val) { block.duration = val; },
+                expanded: expandedPickerKey == '$keyPrefix-duration',
+                onExpand: () {
+                  setState(() {
+                    expandedPickerKey = expandedPickerKey == '$keyPrefix-duration' ? null : '$keyPrefix-duration';
+                  });
+                },
               ),
             ],
             if (block.type == "EMOM") ...[
@@ -223,6 +232,12 @@ class _MixBuilderScreenState extends State<MixBuilderScreen> {
                 initialValue: block.rounds,
                 label: "Rounds",
                 onChanged: (val) { block.rounds = val; },
+                expanded: expandedPickerKey == '$keyPrefix-rounds',
+                onExpand: () {
+                  setState(() {
+                    expandedPickerKey = expandedPickerKey == '$keyPrefix-rounds' ? null : '$keyPrefix-rounds';
+                  });
+                },
               ),
             ],
             if (block.type == "TABATA") ...[
@@ -233,6 +248,12 @@ class _MixBuilderScreenState extends State<MixBuilderScreen> {
                 initialValue: block.work,
                 label: "Work (sec)",
                 onChanged: (val) { block.work = val; },
+                expanded: expandedPickerKey == '$keyPrefix-work',
+                onExpand: () {
+                  setState(() {
+                    expandedPickerKey = expandedPickerKey == '$keyPrefix-work' ? null : '$keyPrefix-work';
+                  });
+                },
               ),
               const SizedBox(height: 8),
               TappablePicker(
@@ -241,6 +262,12 @@ class _MixBuilderScreenState extends State<MixBuilderScreen> {
                 initialValue: block.rest,
                 label: "Rest (sec)",
                 onChanged: (val) { block.rest = val; },
+                expanded: expandedPickerKey == '$keyPrefix-rest',
+                onExpand: () {
+                  setState(() {
+                    expandedPickerKey = expandedPickerKey == '$keyPrefix-rest' ? null : '$keyPrefix-rest';
+                  });
+                },
               ),
               const SizedBox(height: 8),
               TappablePicker(
@@ -248,6 +275,12 @@ class _MixBuilderScreenState extends State<MixBuilderScreen> {
                 initialValue: block.rounds,
                 label: "Rounds",
                 onChanged: (val) { block.rounds = val; },
+                expanded: expandedPickerKey == '$keyPrefix-rounds',
+                onExpand: () {
+                  setState(() {
+                    expandedPickerKey = expandedPickerKey == '$keyPrefix-rounds' ? null : '$keyPrefix-rounds';
+                  });
+                },
               ),
             ],
             if (block.type == "For Time")
@@ -308,6 +341,10 @@ class _MixBuilderScreenState extends State<MixBuilderScreen> {
   }
 }
 
+
+// Add an enum to identify pickers (must be top-level in Dart)
+enum PickerType { duration, rounds, work, rest }
+
 class BlockConfigScreen extends StatefulWidget {
   final WorkoutBlock block;
 
@@ -318,7 +355,8 @@ class BlockConfigScreen extends StatefulWidget {
 }
 
 class _BlockConfigScreenState extends State<BlockConfigScreen> {
-  late final WorkoutBlock block;
+  PickerType? expandedPicker;
+  late WorkoutBlock block;
 
   @override
   void initState() {
@@ -351,6 +389,12 @@ class _BlockConfigScreenState extends State<BlockConfigScreen> {
                 initialValue: block.duration,
                 label: "Duration (sec)",
                 onChanged: (val) { block.duration = val; },
+                expanded: expandedPicker == PickerType.duration,
+                onExpand: () {
+                  setState(() {
+                    expandedPicker = expandedPicker == PickerType.duration ? null : PickerType.duration;
+                  });
+                },
               ),
               const SizedBox(height: 24),
             ],
@@ -360,6 +404,12 @@ class _BlockConfigScreenState extends State<BlockConfigScreen> {
                 initialValue: block.rounds,
                 label: "Rounds",
                 onChanged: (val) { block.rounds = val; },
+                expanded: expandedPicker == PickerType.rounds,
+                onExpand: () {
+                  setState(() {
+                    expandedPicker = expandedPicker == PickerType.rounds ? null : PickerType.rounds;
+                  });
+                },
               ),
               const SizedBox(height: 24),
             ],
@@ -370,6 +420,12 @@ class _BlockConfigScreenState extends State<BlockConfigScreen> {
                 initialValue: block.work,
                 label: "Work (sec)",
                 onChanged: (val) { block.work = val; },
+                expanded: expandedPicker == PickerType.work,
+                onExpand: () {
+                  setState(() {
+                    expandedPicker = expandedPicker == PickerType.work ? null : PickerType.work;
+                  });
+                },
               ),
               const SizedBox(height: 16),
               TappablePicker(
@@ -378,6 +434,12 @@ class _BlockConfigScreenState extends State<BlockConfigScreen> {
                 initialValue: block.rest,
                 label: "Rest (sec)",
                 onChanged: (val) { block.rest = val; },
+                expanded: expandedPicker == PickerType.rest,
+                onExpand: () {
+                  setState(() {
+                    expandedPicker = expandedPicker == PickerType.rest ? null : PickerType.rest;
+                  });
+                },
               ),
               const SizedBox(height: 16),
               TappablePicker(
@@ -385,6 +447,12 @@ class _BlockConfigScreenState extends State<BlockConfigScreen> {
                 initialValue: block.rounds,
                 label: "Rounds",
                 onChanged: (val) { block.rounds = val; },
+                expanded: expandedPicker == PickerType.rounds,
+                onExpand: () {
+                  setState(() {
+                    expandedPicker = expandedPicker == PickerType.rounds ? null : PickerType.rounds;
+                  });
+                },
               ),
               const SizedBox(height: 24),
             ],
@@ -423,6 +491,8 @@ String formatDuration(int sec) {
 }
 
 class TappablePicker extends StatefulWidget {
+    final bool expanded;
+    final VoidCallback? onExpand;
   final List<int> values;
   final int initialValue;
   final String label;
@@ -438,6 +508,8 @@ class TappablePicker extends StatefulWidget {
     this.suffix = '',
     this.formatter,
     required this.onChanged,
+    this.expanded = false,
+    this.onExpand,
   });
 
   @override
@@ -445,7 +517,8 @@ class TappablePicker extends StatefulWidget {
 }
 
 class _TappablePickerState extends State<TappablePicker> {
-  bool _expanded = false;
+    Timer? _collapseTimer;
+  // _expanded is now controlled by parent
   late int _current;
   late int _selectedIndex;
   late final FixedExtentScrollController _controller;
@@ -465,6 +538,7 @@ class _TappablePickerState extends State<TappablePicker> {
 
   @override
   void dispose() {
+    _collapseTimer?.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -474,7 +548,7 @@ class _TappablePickerState extends State<TappablePicker> {
     return Column(
       children: [
         GestureDetector(
-          onTap: () => setState(() => _expanded = !_expanded),
+          onTap: widget.onExpand,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             decoration: BoxDecoration(
@@ -494,7 +568,7 @@ class _TappablePickerState extends State<TappablePicker> {
             ),
           ),
         ),
-        if (_expanded)
+        if (widget.expanded)
           Container(
             height: 200,
             margin: const EdgeInsets.only(top: 4),
@@ -504,7 +578,14 @@ class _TappablePickerState extends State<TappablePicker> {
             ),
             child: NotificationListener<ScrollEndNotification>(
               onNotification: (_) {
-                setState(() {});
+                // Cancel any previous timer and start a new one
+                _collapseTimer?.cancel();
+                _collapseTimer = Timer(const Duration(seconds: 1), () {
+                  if (mounted && widget.expanded && widget.onExpand != null) {
+                    widget.onExpand!();
+                    widget.onChanged(widget.values[_selectedIndex]);
+                  }
+                });
                 return false;
               },
               child: ListWheelScrollView.useDelegate(
@@ -513,9 +594,12 @@ class _TappablePickerState extends State<TappablePicker> {
                 physics: const FixedExtentScrollPhysics(),
                 overAndUnderCenterOpacity: 1.0,
                 onSelectedItemChanged: (i) {
-                  _current = widget.values[i];
-                  _selectedIndex = i;
-                  widget.onChanged(widget.values[i]);
+                  setState(() {
+                    _current = widget.values[i];
+                    _selectedIndex = i;
+                  });
+                  // Cancel any existing collapse timer
+                  _collapseTimer?.cancel();
                 },
                 childDelegate: ListWheelChildBuilderDelegate(
                   childCount: widget.values.length,
@@ -554,6 +638,48 @@ class TimerScreen extends StatefulWidget {
 }
 
 class _TimerScreenState extends State<TimerScreen> {
+    void nextPhase() {
+      playBeep();
+      if (currentBlock == null) return;
+      WorkoutBlock block = currentBlock!;
+
+      if (block.type == "AMRAP" || block.type == "Rest") {
+        nextBlock();
+        return;
+      }
+
+      if (block.type == "EMOM") {
+        round++;
+        if (round > block.rounds) {
+          nextBlock();
+        } else {
+          seconds = block.duration;
+        }
+      }
+
+      if (block.type == "TABATA") {
+        if (workPhase) {
+          seconds = block.rest;
+          workPhase = false;
+        } else {
+          round++;
+          if (round > block.rounds) {
+            // Only end workout if this is the last block
+            if (blockIndex >= widget.blocks.length - 1) {
+              nextBlock();
+            } else {
+              // Go to next block as usual
+              timer?.cancel();
+              blockIndex++;
+              startBlock();
+            }
+            return;
+          }
+          seconds = block.work;
+          workPhase = true;
+        }
+      }
+    }
   int blockIndex = 0;
   int seconds = 0;
   int round = 1;
@@ -565,7 +691,10 @@ class _TimerScreenState extends State<TimerScreen> {
   Timer? timer;
   final player = AudioPlayer();
 
-  WorkoutBlock get currentBlock => widget.blocks[blockIndex];
+  WorkoutBlock? get currentBlock =>
+      (widget.blocks.isNotEmpty && blockIndex < widget.blocks.length)
+          ? widget.blocks[blockIndex]
+          : null;
 
   void startPrepCountdown() {
     prepPhase = true;
@@ -593,11 +722,12 @@ class _TimerScreenState extends State<TimerScreen> {
   }
 
   void startBlock() {
-    WorkoutBlock block = currentBlock;
+    if (currentBlock == null) return;
+    WorkoutBlock block = currentBlock!;
 
-    if (block.type == "AMRAP" || block.type == "Rest") {
-      seconds = block.duration;
-    }
+        if (block.type == "AMRAP" || block.type == "Rest") {
+          seconds = block.duration;
+        }
 
     if (block.type == "For Time") {
       seconds = 0;
@@ -609,7 +739,7 @@ class _TimerScreenState extends State<TimerScreen> {
     }
 
     if (block.type == "TABATA") {
-      seconds = block.work;
+          seconds = block.work; // Ensure latest work value
       round = 1;
       workPhase = true;
     }
@@ -617,53 +747,16 @@ class _TimerScreenState extends State<TimerScreen> {
     timer = Timer.periodic(const Duration(seconds: 1), (t) {
       setState(() {
         if (!paused) {
-          if (currentBlock.type == "For Time") {
+          if (currentBlock!.type == "For Time") {
             seconds++;
           } else {
             seconds--;
           }
         }
-        if (seconds > 0 && seconds <= 3 && currentBlock.type != "For Time") playBeep();
-        if (seconds <= 0 && currentBlock.type != "For Time") nextPhase();
+        if (seconds > 0 && seconds <= 3 && currentBlock!.type != "For Time") playBeep();
+        if (seconds <= 0 && currentBlock!.type != "For Time") nextPhase();
       });
     });
-  }
-
-  void nextPhase() {
-    playBeep();
-    WorkoutBlock block = currentBlock;
-
-    if (block.type == "AMRAP" || block.type == "Rest") {
-      nextBlock();
-      return;
-    }
-
-    if (block.type == "EMOM") {
-      round++;
-
-      if (round > block.rounds) {
-        nextBlock();
-      } else {
-        seconds = block.duration;
-      }
-    }
-
-    if (block.type == "TABATA") {
-      if (workPhase) {
-        seconds = block.rest;
-        workPhase = false;
-      } else {
-        round++;
-
-        if (round > block.rounds) {
-          nextBlock();
-          return;
-        }
-
-        seconds = block.work;
-        workPhase = true;
-      }
-    }
   }
 
   void nextBlock() {
@@ -700,17 +793,25 @@ class _TimerScreenState extends State<TimerScreen> {
     startPrepCountdown();
   }
 
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
-  }
+        // (removed misplaced code)
 
   @override
   Widget build(BuildContext context) {
-    String phase = "";
+    if (currentBlock == null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text("No Blocks")),
+        body: const Center(
+          child: Text(
+            "No workout blocks to display. Please add at least one block.",
+            style: TextStyle(fontSize: 20),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
 
-    if (currentBlock.type == "TABATA") {
+    String phase = "";
+    if (currentBlock!.type == "TABATA") {
       phase = workPhase ? "WORK" : "REST";
     }
 
@@ -721,7 +822,7 @@ class _TimerScreenState extends State<TimerScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              currentBlock.type,
+              currentBlock!.type,
               style: const TextStyle(fontSize: 28),
             ),
             const SizedBox(height: 20),
@@ -743,35 +844,35 @@ class _TimerScreenState extends State<TimerScreen> {
             Text(phase),
             const SizedBox(height: 40),
 
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () => setState(() => paused = !paused),
-                  child: Text(paused ? "Resume" : "Pause"),
-                ),
-                if (!prepPhase && currentBlock.type == "For Time")
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   ElevatedButton(
-                    onPressed: nextBlock,
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                    child: const Text("Done"),
+                    onPressed: () => setState(() => paused = !paused),
+                    child: Text(paused ? "Resume" : "Pause"),
                   ),
-                ElevatedButton(
-                  onPressed: () {
-                    timer?.cancel();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (_) => const WorkoutCompleteScreen()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  child: const Text("End"),
-                ),
-              ],
+                  if (!prepPhase && currentBlock!.type == "For Time")
+                    ElevatedButton(
+                      onPressed: nextBlock,
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                      child: const Text("Done"),
+                    ),
+                  ElevatedButton(
+                    onPressed: () {
+                      timer?.cancel();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (_) => const WorkoutCompleteScreen()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                    child: const Text("End"),
+                  ),
+                ],
+              ),
             ),
-          ),
           ],
         ),
       ),
