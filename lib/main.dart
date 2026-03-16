@@ -23,6 +23,7 @@ class WorkoutTimerApp extends StatelessWidget {
 
 class WorkoutBlock {
   String type;
+  String name;
   int duration;
   int rounds;
   int work;
@@ -30,6 +31,7 @@ class WorkoutBlock {
 
   WorkoutBlock({
     required this.type,
+    this.name = '',
     this.duration = 60,
     this.rounds = 1,
     this.work = 20,
@@ -360,11 +362,20 @@ class BlockConfigScreen extends StatefulWidget {
 class _BlockConfigScreenState extends State<BlockConfigScreen> {
   PickerType? expandedPicker;
   late WorkoutBlock block;
+  late TextEditingController _nameController;
 
   @override
   void initState() {
     super.initState();
     block = widget.block;
+    _nameController = TextEditingController(text: block.name);
+    _nameController.addListener(() { block.name = _nameController.text; });
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
   }
 
   void startTimer() {
@@ -386,6 +397,15 @@ class _BlockConfigScreenState extends State<BlockConfigScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            TextField(
+              controller: _nameController,
+              decoration: InputDecoration(
+                labelText: 'Block Name (optional)',
+                hintText: block.type,
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 20),
             if (block.type != "TABATA" && block.type != "For Time") ...[
               TappablePicker(
                 values: durationValues,
@@ -824,7 +844,7 @@ class _TimerScreenState extends State<TimerScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              currentBlock!.type,
+              currentBlock!.name.isNotEmpty ? currentBlock!.name : currentBlock!.type,
               style: const TextStyle(fontSize: 28),
             ),
             const SizedBox(height: 20),
