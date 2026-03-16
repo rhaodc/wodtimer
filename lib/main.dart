@@ -866,7 +866,10 @@ class _TimerScreenState extends State<TimerScreen> {
                 style: TextStyle(fontSize: 28),
               ),
             const SizedBox(height: 20),
-            Text("Round $round"),
+            Text(
+              currentBlock!.rounds > 1 ? "$round/${currentBlock!.rounds}" : "Round $round",
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+            ),
             const SizedBox(height: 10),
             Text(phase),
             const SizedBox(height: 40),
