@@ -647,13 +647,13 @@ class _TimerScreenState extends State<TimerScreen> {
       WorkoutBlock block = currentBlock!;
 
       if (block.type == "AMRAP" || block.type == "Rest") {
-        playBeep();
+        audioService.playLongBeep();
         nextBlock();
         return;
       }
 
       if (block.type == "EMOM") {
-        playBeep();
+        audioService.playLongBeep();
         round++;
         if (round > block.rounds) {
           nextBlock();
