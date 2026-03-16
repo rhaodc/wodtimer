@@ -844,6 +844,22 @@ class _TimerScreenState extends State<TimerScreen> {
               style: const TextStyle(fontSize: 28),
             ),
             const SizedBox(height: 20),
+            if (prepPhase) ...[
+              Text(
+                currentBlock!.type == "TABATA"
+                    ? "Work ${formatDuration(currentBlock!.work)}  ·  Rest ${formatDuration(currentBlock!.rest)}"
+                    : currentBlock!.type == "For Time"
+                        ? ""
+                        : "Duration: ${formatDuration(currentBlock!.duration)}",
+                style: const TextStyle(fontSize: 20, color: Colors.white70),
+              ),
+              if (currentBlock!.type != "For Time")
+                Text(
+                  currentBlock!.rounds > 1 ? "${currentBlock!.rounds} Rounds" : "1 Round",
+                  style: const TextStyle(fontSize: 20, color: Colors.white70),
+                ),
+              const SizedBox(height: 12),
+            ],
             Text(
               prepPhase ? prepSeconds.toString() : formatTime(seconds),
               style: const TextStyle(
