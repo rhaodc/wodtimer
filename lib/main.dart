@@ -34,8 +34,8 @@ class WorkoutBlock {
     this.name = '',
     this.duration = 60,
     this.rounds = 1,
-    this.work = 20,
-    this.rest = 10,
+    this.work = 30,
+    this.rest = 15,
   });
 }
 
