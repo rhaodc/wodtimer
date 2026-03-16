@@ -643,16 +643,17 @@ class TimerScreen extends StatefulWidget {
 
 class _TimerScreenState extends State<TimerScreen> {
     void nextPhase() {
-      playBeep();
       if (currentBlock == null) return;
       WorkoutBlock block = currentBlock!;
 
       if (block.type == "AMRAP" || block.type == "Rest") {
+        playBeep();
         nextBlock();
         return;
       }
 
       if (block.type == "EMOM") {
+        playBeep();
         round++;
         if (round > block.rounds) {
           nextBlock();
@@ -662,17 +663,16 @@ class _TimerScreenState extends State<TimerScreen> {
       }
 
       if (block.type == "TABATA") {
+        audioService.playLongBeep();
         if (workPhase) {
           seconds = block.rest;
           workPhase = false;
         } else {
           round++;
           if (round > block.rounds) {
-            // Only end workout if this is the last block
             if (blockIndex >= widget.blocks.length - 1) {
               nextBlock();
             } else {
-              // Go to next block as usual
               timer?.cancel();
               blockIndex++;
               startBlock();
@@ -712,6 +712,7 @@ class _TimerScreenState extends State<TimerScreen> {
         }
         
         if (prepSeconds <= 0) {
+          audioService.playLongBeep();
           timer?.cancel();
           prepPhase = false;
           startBlock();
