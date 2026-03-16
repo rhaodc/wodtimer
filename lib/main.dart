@@ -498,12 +498,8 @@ class _BlockConfigScreenState extends State<BlockConfigScreen> {
   }
 }
 
-List<int> get durationValues {
-  final values = <int>[];
-  for (int i = 5; i <= 60; i += 5) { values.add(i); }
-  for (int i = 70; i <= 600; i += 10) { values.add(i); }
-  return values;
-}
+List<int> get durationValues =>
+    List.generate(80, (i) => (i + 1) * 15);
 
 List<int> get roundValues => List.generate(30, (i) => i + 1);
 
