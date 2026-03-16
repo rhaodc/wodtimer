@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'audio_service.dart';
+
+final audioService = AudioService();
 
 void main() {
   runApp(const WorkoutTimerApp());
@@ -182,6 +184,7 @@ class _MixBuilderScreenState extends State<MixBuilderScreen> {
 
   void startTimer() {
     if (blocks.isEmpty) return;
+    audioService.unlockAudio();
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => TimerScreen(blocks: blocks)),
@@ -365,6 +368,7 @@ class _BlockConfigScreenState extends State<BlockConfigScreen> {
   }
 
   void startTimer() {
+    audioService.unlockAudio();
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -689,7 +693,6 @@ class _TimerScreenState extends State<TimerScreen> {
   bool paused = false;
 
   Timer? timer;
-  final player = AudioPlayer();
 
   WorkoutBlock? get currentBlock =>
       (widget.blocks.isNotEmpty && blockIndex < widget.blocks.length)
@@ -717,9 +720,7 @@ class _TimerScreenState extends State<TimerScreen> {
     });
   }
 
-  void playBeep() async {
-    await player.play(AssetSource('beep.mp3'));
-  }
+  void playBeep() => audioService.playBeep();
 
   void startBlock() {
     if (currentBlock == null) return;

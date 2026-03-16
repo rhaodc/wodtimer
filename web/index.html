@@ -33,14 +33,35 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
-  <!--
-    You can customize the "flutter_bootstrap.js" script.
-    This is useful to provide a custom configuration to the Flutter loader
-    or to give the user feedback during the initialization process.
-
-    For more details:
-    * https://docs.flutter.dev/platform-integration/web/initialization
-  -->
+  <script>
+    window._wodAudioCtx = null;
+    window._wodUnlockAudio = function() {
+      try {
+        if (!window._wodAudioCtx) {
+          window._wodAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (window._wodAudioCtx.state === 'suspended') {
+          window._wodAudioCtx.resume();
+        }
+      } catch(e) {}
+    };
+    window._wodPlayBeep = function() {
+      try {
+        window._wodUnlockAudio();
+        var ctx = window._wodAudioCtx;
+        var oscillator = ctx.createOscillator();
+        var gainNode = ctx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        oscillator.type = 'sine';
+        oscillator.frequency.value = 880;
+        gainNode.gain.setValueAtTime(0.4, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+        oscillator.start(ctx.currentTime);
+        oscillator.stop(ctx.currentTime + 0.3);
+      } catch(e) { console.log('Beep error:', e); }
+    };
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
