@@ -61,6 +61,22 @@
         oscillator.stop(ctx.currentTime + 0.3);
       } catch(e) { console.log('Beep error:', e); }
     };
+    window._wodPlayLongBeep = function() {
+      try {
+        window._wodUnlockAudio();
+        var ctx = window._wodAudioCtx;
+        var oscillator = ctx.createOscillator();
+        var gainNode = ctx.createGain();
+        oscillator.connect(gainNode);
+        gainNode.connect(ctx.destination);
+        oscillator.type = 'sine';
+        oscillator.frequency.value = 660;
+        gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+        oscillator.start(ctx.currentTime);
+        oscillator.stop(ctx.currentTime + 1.2);
+      } catch(e) { console.log('LongBeep error:', e); }
+    };
   </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>

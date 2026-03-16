@@ -766,7 +766,7 @@ class _TimerScreenState extends State<TimerScreen> {
 
     if (blockIndex >= widget.blocks.length) {
 
-      playBeep();
+      audioService.playLongBeep();
 
       Navigator.pushReplacement(
         context,
