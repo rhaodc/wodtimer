@@ -598,14 +598,11 @@ class _TappablePickerState extends State<TappablePicker> {
             ),
             child: NotificationListener<ScrollEndNotification>(
               onNotification: (_) {
-                // Cancel any previous timer and start a new one
-                _collapseTimer?.cancel();
-                _collapseTimer = Timer(const Duration(seconds: 1), () {
-                  if (mounted && widget.expanded && widget.onExpand != null) {
-                    widget.onExpand!();
-                    widget.onChanged(widget.values[_selectedIndex]);
-                  }
-                });
+                final idx = _controller.selectedItem;
+                _current = widget.values[idx];
+                _selectedIndex = idx;
+                widget.onChanged(widget.values[idx]);
+                setState(() {});
                 return false;
               },
               child: ListWheelScrollView.useDelegate(
@@ -614,12 +611,8 @@ class _TappablePickerState extends State<TappablePicker> {
                 physics: const FixedExtentScrollPhysics(),
                 overAndUnderCenterOpacity: 1.0,
                 onSelectedItemChanged: (i) {
-                  setState(() {
-                    _current = widget.values[i];
-                    _selectedIndex = i;
-                  });
-                  // Cancel any existing collapse timer
-                  _collapseTimer?.cancel();
+                  _current = widget.values[i];
+                  _selectedIndex = i;
                 },
                 childDelegate: ListWheelChildBuilderDelegate(
                   childCount: widget.values.length,
