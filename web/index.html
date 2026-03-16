@@ -72,9 +72,9 @@
         oscillator.type = 'sine';
         oscillator.frequency.value = 660;
         gainNode.gain.setValueAtTime(0.5, ctx.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.5);
         oscillator.start(ctx.currentTime);
-        oscillator.stop(ctx.currentTime + 1.2);
+        oscillator.stop(ctx.currentTime + 1.5);
       } catch(e) { console.log('LongBeep error:', e); }
     };
   </script>
